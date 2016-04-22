@@ -1,6 +1,7 @@
 # encoding: utf-8
 require 'rest_client'
 require 'yaml'
+require 'json'
 
 class Api
   def initialize
@@ -9,15 +10,15 @@ class Api
     @base_url = "#{config['environment']}/"
   end
 
-  def get(url)
-    RestClient.get("#{@base_url}/#{url}?token=#{@token}&pretty=1") { |response| response }
+  def get(url, options = nil)
+    RestClient.get("#{@base_url}/#{url}?token=#{@token}&#{options}&pretty=1") { |response| JSON.parse(response) }
   end
 
   def post(url, body)
-    system("curl -F file=@#{body} -F token=#{@token} #{@base_url}/#{url}")
+    `curl -s -F file=@#{body} -F token=#{@token} #{@base_url}/#{url}`
   end
 
-  def delete(url, options)
-    RestClient.delete("#{@base_url}/#{url}?token=#{@token}&#{options}&pretty=1") { |response| response }
+  def delete(url, options = nil)
+    RestClient.delete("#{@base_url}/#{url}?token=#{@token}&#{options}&pretty=1") { |response| JSON.parse(response) }
   end
 end
