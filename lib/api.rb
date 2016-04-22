@@ -13,23 +13,11 @@ class Api
     RestClient.get("#{@base_url}/#{url}?token=#{@token}&pretty=1") { |response| response }
   end
 
-  # def post(url, body)
-  #   RestClient.post("#{@base_url}#{url}", body, @header) { |response| response }
-  # end
+  def post(url, body)
+    system("curl -F file=@#{body} -F token=#{@token} #{@base_url}/#{url}")
+  end
 
-  # def put(url, body)
-  #   RestClient.put("#{@base_url}#{url}", body, @header) { |response| response }
-  # end
-
-  # def delete(url)
-  #   RestClient.delete("#{@base_url}#{url}", @header) { |response| response }
-  # end
-
-  # def pget(url)
-  #   RestClient.get("#{@base_url}#{url}", @header) { |response| [response, JSON.parse(response)] }
-  # end
-
-  # def ppost(url, body)
-  #   RestClient.post("#{@base_url}#{url}", body, @header) { |response| [response, JSON.parse(response)] }
-  # end
+  def delete(url, options)
+    RestClient.delete("#{@base_url}/#{url}?token=#{@token}&#{options}&pretty=1") { |response| response }
+  end
 end
